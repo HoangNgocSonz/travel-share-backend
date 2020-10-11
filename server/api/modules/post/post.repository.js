@@ -12,6 +12,7 @@ const PostSchema = mongoose.Schema({
     images:[{
         type:String,
     }],
+    Season:String,
 
 });
 
