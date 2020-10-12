@@ -1,14 +1,7 @@
-const mongoose = require("mongoose");
+// const mongoose = require("mongoose");
+// mongoose.set("debug", true);
 
-const UserSchema = mongoose.Schema({
-  avatar: String,
-  email: String,
-  password: String,
-  userName: String,
-  postId: String,
-});
-
-const UserModel = mongoose.model("User", UserSchema);
+const UserModel = require("./user.model");
 
 const find = async function (query) {
   return await UserModel.find(query);
@@ -28,19 +21,18 @@ const create = async function (data) {
 };
 
 const update = async function (id, data) {
-  if (data.chapters) {
-    return await UserModel.findByIdAndUpdate(
-      id,
-      { $addToSet: data },
-      { new: true }
-    );
-    // return await UserModel.findByIdAndUpdate(id,{$set:data},{new:true});
-  } else if (!data.chapters) {
-    return await UserModel.findByIdAndUpdate(id, { $set: data }, { new: true });
-  } else {
-    throw new Error("chỉ dùng để thêm chap mới, err tại user.repo");
-  }
+  return await UserModel.findOneAndUpdate(
+    { _id: id },
+    // { $addToSet: data },
+    data,
+    {
+      new: true,
+      runValidators: true,
+      context: "query",
+    }
+  );
 };
+
 const deleteOne = async function (id) {
   return await UserModel.findByIdAndDelete(id);
 };

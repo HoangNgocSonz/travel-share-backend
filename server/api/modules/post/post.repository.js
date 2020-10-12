@@ -1,24 +1,8 @@
 const mongoose = require("mongoose");
+mongoose.set("debug", true);
 
-const PostSchema = mongoose.Schema({
-  date: Date,
-  userName: String,
-  userId: String,
-  cap: String,
-  comments: [
-    {
-      userIdComment: String,
-      message: String,
-    },
-  ],
-  images: [
-    {
-      type: String,
-    },
-  ],
-});
-
-const PostModel = mongoose.model("Post", PostSchema);
+const PostModel = require("./post.model");
+const UserModel = require("../user/user.model");
 
 const find = async function (query) {
   return await PostModel.find(query);
@@ -38,21 +22,21 @@ const create = async function (data) {
 };
 
 const update = async function (id, data) {
-  if (data.chapters) {
-    return await PostModel.findByIdAndUpdate(
-      id,
-      { $addToSet: data },
-      { new: true }
-    );
-    // return await PostModel.findByIdAndUpdate(id,{$set:data},{new:true});
-  } else if (!data.chapters) {
-    return await PostModel.findByIdAndUpdate(id, { $set: data }, { new: true });
-  } else {
-    throw new Error("chỉ dùng để thêm chap mới, err tại post.repo");
-  }
+  console.log(id, data);
+  return await PostModel.findOneAndUpdate(
+    { _id: id },
+    // { $addToSet: data },
+    data,
+    {
+      new: true,
+      runValidators: true,
+      context: "query",
+    }
+  );
 };
-const deleteOne = async function (id) {
-  return await PostModel.findByIdAndDelete(id);
+
+const deleteOne = async function (id, options) {
+  return await PostModel.findByIdAndDelete(id, options);
 };
 
 module.exports = {

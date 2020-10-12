@@ -18,8 +18,6 @@ router.get("/", async function (req, res) {
 router.post("/", async function (req, res) {
   try {
     const data = await service.create(req.body);
-    console.log(data);
-    console.log(data);
     res.status(200).send({
       data: data,
     });

@@ -1,7 +1,7 @@
 require("dotenv").config();
 const express = require("express");
 const config = require("./config");
-const bodyParser = require("body-parser");
+var bodyParser = require("body-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 
@@ -19,7 +19,15 @@ const PORT = process.env.PORT || 6969;
 
 const app = express();
 app.use(cors());
+
 app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(function (err, req, res, next) {
+  if (err instanceof SyntaxError && err.status === 400 && "body" in err) {
+    return res.status(400).json({ error: "Bad JSON request" });
+  }
+});
 
 app.use("/", express.static("../client"));
 app.use("/api/post", postRouter);
