@@ -13,7 +13,6 @@ const PostSchema = mongoose.Schema({
         type:String,
     }],
     Season:String,
-
 });
 
 const PostModel = mongoose.model('Post',PostSchema);
