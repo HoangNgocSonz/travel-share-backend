@@ -21,6 +21,7 @@ const PostSchema = mongoose.Schema({
   ],
   season: { type: String, required: true },
   date: Date,
+  country: { type: String, required: true },
 });
 
 module.exports = mongoose.model("Post", PostSchema);
