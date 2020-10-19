@@ -10,6 +10,7 @@ const PostSchema = mongoose.Schema({
         ref: "User",
       },
       message: String,
+      createdAt: Date,
     },
     { required: true },
   ],

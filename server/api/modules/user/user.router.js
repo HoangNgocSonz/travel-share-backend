@@ -57,6 +57,21 @@ router.get("/:id/posts", async function (req, res) {
   }
 });
 
+router.post("/:id/follow", async function (req, res) {
+  const { id } = req.params;
+  // console.log(id);
+  try {
+    const data = await service.updateFollow(id, req.body);
+    res.status(200).send({
+      data: data,
+    });
+  } catch (err) {
+    res.status(500).send({
+      error: err.message,
+    });
+  }
+});
+
 router.put("/:id", async function (req, res) {
   try {
     console.log(req.body);
