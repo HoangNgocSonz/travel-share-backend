@@ -1,4 +1,5 @@
 const repository = require("./post.repository");
+const userRepo = require("../user/user.repository");
 
 const PostModel = require("./post.model");
 const UserModel = require("../user/user.model");
@@ -33,6 +34,22 @@ const update = async function (id, data) {
   if (!existed) {
     throw new Error("entity not found");
   }
+  // if post author change then remove its _id in author's posts array
+  if (data.author) {
+    const post = await PostModel.findById(id).populate("author");
+    const newAuthor = await userRepo.findById(data.author);
+    if (!newAuthor) {
+      throw new Error("new author not found");
+    }
+    // remove old _id in current author's posts
+    post.author.posts.pull(post);
+    await post.author.save();
+    // add id to author's post list
+    newAuthor.posts.push(id);
+    await newAuthor.save();
+    // return post;
+  }
+  // return { msg: "complete" };
   return await repository.update(id, data);
 };
 
