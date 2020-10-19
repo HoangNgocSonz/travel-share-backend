@@ -44,9 +44,9 @@ router.get("/:id", async function (req, res) {
 
 router.get("/:id/posts", async function (req, res) {
   try {
-    const data = await (await service.findById(req.params.id)).populate(
-      "posts"
-    );
+    const data = await (await service.findById(req.params.id))
+      .populate("posts")
+      .execPopulate();
     res.status(200).send({
       data: data,
     });
